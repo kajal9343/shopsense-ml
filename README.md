@@ -231,28 +231,6 @@ Open your browser at **[http://127.0.0.1:8000](http://127.0.0.1:8000)** to acces
 
 ---
 
-## 🎓 8. College Project & Academic Defense (Viva Q&A)
-
-### Q1: Why did you choose Random Forest / Gradient Boosting over Logistic Regression for return prediction?
-> **Answer:** Customer returns are driven by complex nonlinear interactions (e.g. COD payments combined with high delivery delays and fashion sizing create super-additive return risk). Tree ensembles capture these interaction terms and non-linear boundaries naturally without manual feature crosses, achieving a superior ROC-AUC of `0.948`.
-
-### Q2: How did you solve multicollinearity in customer segmentation?
-> **Answer:** 12 behavioral dimensions (such as session duration and page views) exhibit natural collinearity. We applied `StandardScaler` followed by **Principal Component Analysis (PCA)**, preserving over 70% of total variance in orthogonal components while enabling clean 2D visualization of the 5 clusters.
-
-### Q3: How does ShopSense solve the trade-off between Sales and Returns?
-> **Answer:** Through **targeted policy levers rather than blanket restrictions**. Instead of disabling COD or refusing returns (which destroys sales conversion), ShopSense flags high-risk orders in real time and offers non-coercive nudges (e.g., 3% instant UPI discount to switch from COD, or an interactive fit quiz for fashion). This maintains gross conversion while slashing avoidable returns by 4.8 percentage points.
-
----
-
-## 💼 9. Client Proposal & Enterprise Production Roadmap
-
-### Next-Gen Add-ons to Pitch to Clients:
-1. **Generative AI Fit & Sizing Concierge:** Integrate an LLM multimodal chatbot that examines user measurements or uploaded photos to recommend exact garment sizing.
-2. **Dynamic COD Disincentive Engine:** Automatically require an instant ₹50 / $2 refundable deposit for COD orders flagged as High Risk ($p > 0.60$).
-3. **Automated Carrier SLA Rerouting (Webhook Integration):** Real-time API integration with logistics aggregators (Shiprocket, Narvar) to dynamically switch carriers based on live pin-code transit delays.
-4. **Reinforcement Learning for Dynamic Discounting:** Replace static discount tiers with a Contextual Bandit algorithm that offers the exact minimum discount required to trigger purchase without stimulating remorse returns.
-
----
 
 ## 👥 Contributors & Academic Attribution
 Developed as an Advanced E-Commerce Machine Learning & Revenue Optimization Capstone System.
