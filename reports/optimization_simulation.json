@@ -1,0 +1,38 @@
+{
+    "parameters": {
+        "cod_intervention_rate": 0.6,
+        "fit_advisor_adoption": 0.65,
+        "logistics_reroute_intensity": 0.75,
+        "discount_strategy": "targeted"
+    },
+    "baseline": {
+        "total_orders": 14227,
+        "gross_revenue": 1357262.4,
+        "returns_count": 2998,
+        "return_rate_pct": 21.07,
+        "return_costs": 54781.22,
+        "returned_merchandise_loss": 284993.11,
+        "net_realized_revenue": 1017488.07,
+        "avg_csat": 3.95,
+        "retention_rate_pct": 57.58
+    },
+    "optimized": {
+        "total_orders": 14227,
+        "gross_revenue": 1364642.93,
+        "returns_count": 2329,
+        "return_rate_pct": 16.37,
+        "return_costs": 42665.43,
+        "returned_merchandise_loss": 228239.43,
+        "net_realized_revenue": 1093738.07,
+        "avg_csat": 4.15,
+        "retention_rate_pct": 66.67
+    },
+    "lift": {
+        "net_revenue_lift_usd": 76250.0,
+        "net_revenue_lift_pct": 7.49,
+        "return_rate_reduction_pct_points": 4.7,
+        "return_costs_saved_usd": 12115.79,
+        "csat_increase_points": 0.2,
+        "retention_lift_pct_points": 9.09
+    }
+}

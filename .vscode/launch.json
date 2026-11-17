@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ShopSense: Run Web App (Dashboard)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": ["--serve", "--port", "8000"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "ShopSense: Run Full ML Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": ["--pipeline"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "ShopSense: Run Quad-Goal Optimizer Simulation",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": ["--simulate"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}

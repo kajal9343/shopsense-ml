@@ -1,0 +1,176 @@
+{
+    "kpis": {
+        "total_sessions": 25000,
+        "total_orders": 14227,
+        "conversion_rate_pct": 56.91,
+        "total_gross_revenue": 1357262.4,
+        "net_realized_revenue": 1017488.07,
+        "total_discount_given": 268992.54,
+        "total_returns": 2998,
+        "overall_return_rate_pct": 21.07,
+        "total_return_costs": 54781.22,
+        "avg_order_value": 95.4,
+        "avg_csat_rating": 3.95,
+        "ontime_delivery_rate_pct": 84.3,
+        "avg_delivery_delay_days": 0.33
+    },
+    "category_metrics": [
+        {
+            "category": "Beauty & Health",
+            "orders": 1672,
+            "gross_sales": 53034.84,
+            "avg_price": 31.72,
+            "avg_discount": 8.63,
+            "return_count": 280,
+            "return_rate": 16.75,
+            "avg_rating": 3.98
+        },
+        {
+            "category": "Books & Media",
+            "orders": 723,
+            "gross_sales": 16280.11,
+            "avg_price": 22.52,
+            "avg_discount": 8.64,
+            "return_count": 101,
+            "return_rate": 13.97,
+            "avg_rating": 3.97
+        },
+        {
+            "category": "Electronics & Gadgets",
+            "orders": 3340,
+            "gross_sales": 705757.82,
+            "avg_price": 211.3,
+            "avg_discount": 19.21,
+            "return_count": 663,
+            "return_rate": 19.85,
+            "avg_rating": 4.02
+        },
+        {
+            "category": "Fashion & Apparel",
+            "orders": 4841,
+            "gross_sales": 282378.46,
+            "avg_price": 58.33,
+            "avg_discount": 19.26,
+            "return_count": 1241,
+            "return_rate": 25.64,
+            "avg_rating": 3.9
+        },
+        {
+            "category": "Home & Kitchen",
+            "orders": 2412,
+            "gross_sales": 205597.46,
+            "avg_price": 85.24,
+            "avg_discount": 8.74,
+            "return_count": 488,
+            "return_rate": 20.23,
+            "avg_rating": 3.91
+        },
+        {
+            "category": "Sports & Fitness",
+            "orders": 1239,
+            "gross_sales": 94213.71,
+            "avg_price": 76.04,
+            "avg_discount": 8.49,
+            "return_count": 225,
+            "return_rate": 18.16,
+            "avg_rating": 3.92
+        }
+    ],
+    "payment_metrics": [
+        {
+            "payment_method": "BNPL (Pay Later)",
+            "orders": 953,
+            "gross_sales": 88774.83,
+            "returns": 186,
+            "return_rate": 19.52,
+            "share_pct": 6.7
+        },
+        {
+            "payment_method": "Cash on Delivery (COD)",
+            "orders": 3240,
+            "gross_sales": 310290.79,
+            "returns": 1046,
+            "return_rate": 32.28,
+            "share_pct": 22.77
+        },
+        {
+            "payment_method": "Credit Card",
+            "orders": 3496,
+            "gross_sales": 332331.6,
+            "returns": 603,
+            "return_rate": 17.25,
+            "share_pct": 24.57
+        },
+        {
+            "payment_method": "Debit Card",
+            "orders": 1193,
+            "gross_sales": 114896.68,
+            "returns": 220,
+            "return_rate": 18.44,
+            "share_pct": 8.39
+        },
+        {
+            "payment_method": "UPI / Digital Wallet",
+            "orders": 5345,
+            "gross_sales": 510968.5,
+            "returns": 943,
+            "return_rate": 17.64,
+            "share_pct": 37.57
+        }
+    ],
+    "carrier_metrics": [
+        {
+            "carrier": "ApexLogistics",
+            "shipments": 1437,
+            "avg_est_days": 4.025052192066806,
+            "avg_actual_days": 4.44954766875435,
+            "avg_delay": 0.54,
+            "ontime_pct": 76.76,
+            "avg_csat": 3.82
+        },
+        {
+            "carrier": "BlueDart",
+            "shipments": 3570,
+            "avg_est_days": 4.04453781512605,
+            "avg_actual_days": 4.132773109243698,
+            "avg_delay": 0.23,
+            "ontime_pct": 88.85,
+            "avg_csat": 4.0
+        },
+        {
+            "carrier": "Delhivery",
+            "shipments": 3107,
+            "avg_est_days": 4.0,
+            "avg_actual_days": 4.203733504988735,
+            "avg_delay": 0.34,
+            "ontime_pct": 82.88,
+            "avg_csat": 3.92
+        },
+        {
+            "carrier": "SpeedPost",
+            "shipments": 1864,
+            "avg_est_days": 4.053648068669528,
+            "avg_actual_days": 4.609978540772532,
+            "avg_delay": 0.66,
+            "ontime_pct": 69.53,
+            "avg_csat": 3.72
+        },
+        {
+            "carrier": "SwiftExpress",
+            "shipments": 4249,
+            "avg_est_days": 4.05507178159567,
+            "avg_actual_days": 4.09672864203342,
+            "avg_delay": 0.18,
+            "ontime_pct": 90.56,
+            "avg_csat": 4.06
+        }
+    ],
+    "return_reasons": {
+        "Defective / Damaged": 23.78,
+        "Sizing / Fit Issue": 23.02,
+        "Item Not as Described": 21.98,
+        "Impulse Buy / Regret": 14.11,
+        "Delayed Delivery": 8.94,
+        "Found Better Price Elsewhere": 8.17
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "roc_auc": 0.9476,
+    "confusion_matrix": [
+        [
+            1779,
+            467
+        ],
+        [
+            23,
+            577
+        ]
+    ],
+    "classification_report": {
+        "0": {
+            "precision": 0.9872364039955605,
+            "recall": 0.7920747996438112,
+            "f1-score": 0.8789525691699605,
+            "support": 2246.0
+        },
+        "1": {
+            "precision": 0.5526819923371648,
+            "recall": 0.9616666666666667,
+            "f1-score": 0.7019464720194647,
+            "support": 600.0
+        },
+        "accuracy": 0.8278285312719607,
+        "macro avg": {
+            "precision": 0.7699591981663626,
+            "recall": 0.876870733155239,
+            "f1-score": 0.7904495205947126,
+            "support": 2846.0
+        },
+        "weighted avg": {
+            "precision": 0.8956226840394684,
+            "recall": 0.8278285312719607,
+            "f1-score": 0.841635753186019,
+            "support": 2846.0
+        }
+    },
+    "top_features": {
+        "prior_return_ratio": 0.7825514268579852,
+        "prior_orders": 0.02730885563683919,
+        "final_price": 0.021012026792446785,
+        "payment_method_Cash on Delivery (COD)": 0.01946540654637337,
+        "session_duration_min": 0.017579781700516123,
+        "delivery_delay_days": 0.015922242750973824,
+        "customer_tenure_months": 0.01554373320272304,
+        "page_views": 0.01498814732621076,
+        "cart_additions": 0.008454977419777781,
+        "discount_percent": 0.008216463854928335
+    }
+}

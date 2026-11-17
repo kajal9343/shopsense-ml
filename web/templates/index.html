@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSense — Beyond the Purchase | AI & Revenue Optimization</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+    <!-- Top Navigation -->
+    <nav class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl gradient-btn flex items-center justify-center text-white shadow-lg">
+                    <i class="fa-solid fa-chart-line text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight gradient-text">ShopSense</h1>
+                    <p class="text-xs text-slate-400">Beyond the Purchase · Quad-Pillar Intelligence</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-2 h-2 mr-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ML Models Live (AUC: {{ "%.2f"|format(ret_metrics.roc_auc*100) }}%)
+                </span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    <i class="fa-solid fa-brain mr-1.5"></i> 5 Segment Personas
+                </span>
+                <a href="/docs" target="_blank" class="px-3 py-1 rounded-full text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition">
+                    <i class="fa-solid fa-code mr-1"></i> API Docs (Swagger)
+                </a>
+                <a href="#simulator" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold gradient-btn text-white transition hover:opacity-90">
+                    <i class="fa-solid fa-sliders mr-1.5"></i> Quad Simulator
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-10">
+
+        <!-- Executive Hero Banner -->
+        <section class="glass-card p-6 md:p-8 relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="max-w-3xl space-y-3">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-blue-500/10 text-blue-400 text-xs font-semibold">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                    <span>End-to-End Journey & Revenue Optimization Platform</span>
+                </div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Optimizing Beyond the Checkout Button</h2>
+                <p class="text-slate-400 text-sm md:text-base leading-relaxed">
+                    Traditional e-commerce stops tracking once a purchase is logged. ShopSense connects 
+                    <span class="text-slate-200 font-medium">browsing behavior, cart dynamics, pricing & discounts, delivery logistics, customer sentiment</span>, and 
+                    <span class="text-slate-200 font-medium">returns</span> into an intelligent quad-objective decision engine.
+                </p>
+            </div>
+
+            <!-- KPI Cards Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-8">
+                <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                    <p class="text-xs font-medium text-slate-400">Gross Sales</p>
+                    <p class="text-xl font-bold text-white mt-1">${{ "{:,.0f}".format(eda.kpis.total_gross_revenue) }}</p>
+                    <span class="text-[10px] text-slate-500">{{ eda.kpis.total_orders }} orders</span>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                    <p class="text-xs font-medium text-emerald-400">Net Realized Rev</p>
+                    <p class="text-xl font-bold text-emerald-400 mt-1">${{ "{:,.0f}".format(eda.kpis.net_realized_revenue) }}</p>
+                    <span class="text-[10px] text-slate-500">Post returns & logistics</span>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                    <p class="text-xs font-medium text-rose-400">Return Rate</p>
+                    <p class="text-xl font-bold text-rose-400 mt-1">{{ eda.kpis.overall_return_rate_pct }}%</p>
+                    <span class="text-[10px] text-rose-500/80">{{ eda.kpis.total_returns }} items returned</span>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                    <p class="text-xs font-medium text-amber-400">Reverse Logistics</p>
+                    <p class="text-xl font-bold text-amber-400 mt-1">${{ "{:,.0f}".format(eda.kpis.total_return_costs) }}</p>
+                    <span class="text-[10px] text-slate-500">Restock & shipping cost</span>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                    <p class="text-xs font-medium text-blue-400">Avg CSAT Rating</p>
+                    <p class="text-xl font-bold text-blue-400 mt-1">{{ eda.kpis.avg_csat_rating }} ★</p>
+                    <span class="text-[10px] text-slate-500">Scale of 1 - 5</span>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                    <p class="text-xs font-medium text-purple-400">On-Time SLA</p>
+                    <p class="text-xl font-bold text-purple-400 mt-1">{{ eda.kpis.ontime_delivery_rate_pct }}%</p>
+                    <span class="text-[10px] text-slate-500">Avg delay: {{ eda.kpis.avg_delivery_delay_days }}d</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual Analytics Grid -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Funnel & Discounts -->
+            <div class="glass-card p-6 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-lg text-white">Conversion & Discount Funnel</h3>
+                        <p class="text-xs text-slate-400">Session engagement vs checkout conversion rate</p>
+                    </div>
+                    <span class="px-2.5 py-1 text-xs bg-blue-500/10 text-blue-400 rounded-md">Funnel Rate: {{ eda.kpis.conversion_rate_pct }}%</span>
+                </div>
+                <div class="h-64">
+                    <canvas id="funnelChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Payment Method vs Return Risk (COD hazard) -->
+            <div class="glass-card p-6 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-lg text-white">Payment Method Return Hazards</h3>
+                        <p class="text-xs text-slate-400">Cash-on-Delivery (COD) vs Digital Prepaid returns</p>
+                    </div>
+                    <span class="px-2.5 py-1 text-xs bg-rose-500/10 text-rose-400 rounded-md">COD Hazard: ~32%</span>
+                </div>
+                <div class="h-64">
+                    <canvas id="paymentChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Return Root Causes -->
+            <div class="glass-card p-6 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-lg text-white">Root Causes of Returns</h3>
+                        <p class="text-xs text-slate-400">Apparel sizing, delivery delays, and defective items</p>
+                    </div>
+                </div>
+                <div class="h-64">
+                    <canvas id="reasonsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Category Performance -->
+            <div class="glass-card p-6 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-lg text-white">Category Sales vs Return Rate</h3>
+                        <p class="text-xs text-slate-400">Margin contribution and product risk profile</p>
+                    </div>
+                </div>
+                <div class="h-64">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customer Behavioral Personas -->
+        <section class="glass-card p-6 md:p-8 space-y-6">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h3 class="text-xl font-bold text-white">AI Customer Behavioral Segments</h3>
+                    <p class="text-sm text-slate-400">Unsupervised K-Means + PCA Clustering on 12 RFM-E dimensions</p>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    <i class="fa-solid fa-users-viewfinder mr-1.5"></i> 5 Behavioral Personas Identified
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {% for cid, name in persona_map.items() %}
+                {% set stats = cluster_stats[cid|string] if cid|string in cluster_stats else cluster_stats[cid|int] %}
+                <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3 hover:border-blue-500/40 transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">Cluster {{ cid }}</span>
+                        <i class="fa-solid fa-user-tag text-slate-500 text-xs"></i>
+                    </div>
+                    <h4 class="font-bold text-sm text-white leading-snug">{{ name }}</h4>
+                    <div class="space-y-1.5 text-xs text-slate-300">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Avg Spend:</span>
+                            <span class="font-semibold text-emerald-400">${{ "%.1f"|format(stats.total_spend) }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Avg Orders:</span>
+                            <span class="font-semibold">{{ "%.1f"|format(stats.total_orders) }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Return Rate:</span>
+                            <span class="font-semibold {% if stats.return_rate > 0.22 %}text-rose-400{% else %}text-slate-300{% endif %}">
+                                {{ "%.1f"|format(stats.return_rate * 100) }}%
+                            </span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Discount Pref:</span>
+                            <span class="font-semibold text-amber-400">{{ "%.1f"|format(stats.avg_discount_received) }}%</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Customer 360 Journey & CRM Inspector -->
+        <section class="glass-card p-6 md:p-8 space-y-6">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <div class="inline-flex items-center space-x-1.5 text-xs font-semibold text-emerald-400 mb-1">
+                        <i class="fa-solid fa-address-card"></i>
+                        <span>Customer 360° Journey & CRM Inspector</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Live Customer Lifetime & Order History</h3>
+                    <p class="text-sm text-slate-400">Search any Customer ID (e.g., CUST_00001 to CUST_04500) to inspect their behavioral persona, return propensity, and transaction timeline.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="lookupCustomer('CUST_00001')" class="px-2.5 py-1 text-xs rounded bg-slate-800 text-blue-300 hover:bg-slate-700 transition">Sample: Champion</button>
+                    <button onclick="lookupCustomer('CUST_00003')" class="px-2.5 py-1 text-xs rounded bg-slate-800 text-purple-300 hover:bg-slate-700 transition">Sample: Bargain</button>
+                    <button onclick="lookupCustomer('CUST_00005')" class="px-2.5 py-1 text-xs rounded bg-slate-800 text-rose-300 hover:bg-slate-700 transition">Sample: High-Risk</button>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <input id="custSearchInput" type="text" placeholder="Enter Customer ID (e.g. CUST_00001)" class="w-full md:w-80 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                <button id="custSearchBtn" onclick="executeCustomerSearch()" class="px-5 py-2 rounded-lg text-xs font-bold gradient-btn text-white transition hover:opacity-90 flex items-center space-x-2">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Inspect Profile</span>
+                </button>
+            </div>
+
+            <!-- Profile and Orders Container -->
+            <div id="custDetailsContainer" class="hidden space-y-6 pt-2">
+                <!-- Profile Summary Badges -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                        <span class="text-[10px] text-slate-400 block">Behavioral Persona</span>
+                        <span id="custPersonaBadge" class="text-xs font-bold text-blue-400 mt-1 block"></span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                        <span class="text-[10px] text-slate-400 block">Total Spend (LTV)</span>
+                        <span id="custSpendVal" class="text-xs font-bold text-emerald-400 mt-1 block"></span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                        <span class="text-[10px] text-slate-400 block">Total Orders</span>
+                        <span id="custOrdersVal" class="text-xs font-bold text-white mt-1 block"></span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                        <span class="text-[10px] text-slate-400 block">Historical Return Rate</span>
+                        <span id="custReturnRateVal" class="text-xs font-bold text-rose-400 mt-1 block"></span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                        <span class="text-[10px] text-slate-400 block">Avg CSAT Rating</span>
+                        <span id="custRatingVal" class="text-xs font-bold text-amber-400 mt-1 block"></span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                        <span class="text-[10px] text-slate-400 block">City Tier & Region</span>
+                        <span id="custLocationVal" class="text-xs font-bold text-slate-300 mt-1 block"></span>
+                    </div>
+                </div>
+
+                <!-- Recent Orders Table -->
+                <div class="overflow-x-auto rounded-xl border border-slate-800">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/90 text-slate-400 uppercase text-[10px]">
+                            <tr>
+                                <th class="p-3">Order / Txn ID</th>
+                                <th class="p-3">Category</th>
+                                <th class="p-3">Final Price</th>
+                                <th class="p-3">Discount</th>
+                                <th class="p-3">Payment</th>
+                                <th class="p-3">Delivery SLA</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody id="custOrdersTableBody" class="divide-y divide-slate-800 bg-slate-950/60"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quad-Pillar What-If Interactive Simulator -->
+        <section id="simulator" class="glass-card p-6 md:p-8 space-y-6 border-indigo-500/30">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <div class="inline-flex items-center space-x-1.5 text-xs font-semibold text-purple-400 mb-1">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Advanced Challenge Decision Engine</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Quad-Pillar Revenue & Experience Simulator</h3>
+                    <p class="text-sm text-slate-400">
+                        Simultaneously balance <span class="text-blue-400 font-medium">Sales</span>, 
+                        <span class="text-emerald-400 font-medium">Customer Satisfaction</span>, 
+                        <span class="text-indigo-400 font-medium">Retention</span>, and 
+                        <span class="text-rose-400 font-medium">Return Mitigation</span>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Controls -->
+                <div class="lg:col-span-5 space-y-5 bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+                    <h4 class="font-semibold text-sm text-slate-300 flex items-center">
+                        <i class="fa-solid fa-sliders text-blue-400 mr-2"></i> Strategic Policy Levers
+                    </h4>
+                    
+                    <!-- Slider 1 -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-300 font-medium">Smart COD-to-Prepaid Conversion</span>
+                            <span id="codVal" class="text-blue-400 font-bold">60%</span>
+                        </div>
+                        <input id="codSlider" type="range" min="0" max="100" value="60" class="w-full accent-blue-500">
+                        <p class="text-[11px] text-slate-500">Offers 3% instant UPI discount or mandatory OTP for high return risk COD orders.</p>
+                    </div>
+
+                    <!-- Slider 2 -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-300 font-medium">AI Sizing & Fit Advisor Adoption</span>
+                            <span id="fitVal" class="text-blue-400 font-bold">65%</span>
+                        </div>
+                        <input id="fitSlider" type="range" min="0" max="100" value="65" class="w-full accent-blue-500">
+                        <p class="text-[11px] text-slate-500">Interactive body-measurement tool for apparel to eliminate sizing returns.</p>
+                    </div>
+
+                    <!-- Slider 3 -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-300 font-medium">Logistics Carrier SLA Rerouting</span>
+                            <span id="rerouteVal" class="text-blue-400 font-bold">75%</span>
+                        </div>
+                        <input id="rerouteSlider" type="range" min="0" max="100" value="75" class="w-full accent-blue-500">
+                        <p class="text-[11px] text-slate-500">Switches slow carriers to top-tier partners (SwiftExpress / BlueDart).</p>
+                    </div>
+
+                    <!-- Select Strategy -->
+                    <div class="space-y-2">
+                        <label class="text-xs text-slate-300 font-medium block">Discount Governance Strategy</label>
+                        <select id="discountSelect" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200">
+                            <option value="targeted" selected>Targeted (Protect Margins, Cap Unprofitable Discounts)</option>
+                            <option value="aggressive">Aggressive (Blanket Discounts for GMV volume)</option>
+                            <option value="conservative">Conservative (Preserve Premium Pricing)</option>
+                        </select>
+                    </div>
+
+                    <button id="runSimBtn" class="w-full py-2.5 rounded-lg text-xs font-bold gradient-btn text-white transition hover:opacity-90 flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Execute Scenario Simulation</span>
+                    </button>
+                </div>
+
+                <!-- Simulation Output Cards -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-5 rounded-xl bg-slate-900/80 border border-emerald-500/30 space-y-1">
+                            <span class="text-xs font-semibold text-emerald-400 flex items-center">
+                                <i class="fa-solid fa-arrow-trend-up mr-1.5"></i> Net Realized Revenue Lift
+                            </span>
+                            <p id="liftRevenue" class="text-2xl font-extrabold text-emerald-400">+${{ "{:,.0f}".format(sim.lift.net_revenue_lift_usd) }}</p>
+                            <span id="liftRevenuePct" class="text-xs text-emerald-500 font-medium">+{{ sim.lift.net_revenue_lift_pct }}% margin gain</span>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-slate-900/80 border border-blue-500/30 space-y-1">
+                            <span class="text-xs font-semibold text-blue-400 flex items-center">
+                                <i class="fa-solid fa-shield-halved mr-1.5"></i> Return Rate Reduction
+                            </span>
+                            <p id="liftReturns" class="text-2xl font-extrabold text-blue-400">-{{ sim.lift.return_rate_reduction_pct_points }}% pts</p>
+                            <span id="savedCosts" class="text-xs text-blue-500 font-medium">${{ "{:,.0f}".format(sim.lift.return_costs_saved_usd) }} logistics saved</span>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-slate-900/80 border border-amber-500/30 space-y-1">
+                            <span class="text-xs font-semibold text-amber-400 flex items-center">
+                                <i class="fa-solid fa-star mr-1.5"></i> Customer Satisfaction (CSAT)
+                            </span>
+                            <p id="liftCsat" class="text-2xl font-extrabold text-amber-400">+{{ sim.lift.csat_increase_points }} ★</p>
+                            <span id="newCsatVal" class="text-xs text-amber-500 font-medium">New score: {{ sim.optimized.avg_csat }} / 5.0</span>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-slate-900/80 border border-purple-500/30 space-y-1">
+                            <span class="text-xs font-semibold text-purple-400 flex items-center">
+                                <i class="fa-solid fa-user-plus mr-1.5"></i> 90-Day Retention Lift
+                            </span>
+                            <p id="liftRetention" class="text-2xl font-extrabold text-purple-400">+{{ sim.lift.retention_lift_pct_points }}% pts</p>
+                            <span id="newRetentionVal" class="text-xs text-purple-500 font-medium">New rate: {{ sim.optimized.retention_rate_pct }}%</span>
+                        </div>
+                    </div>
+
+                    <!-- Strategic Takeaway Box -->
+                    <div class="p-4 rounded-xl bg-blue-950/30 border border-blue-800/40 text-xs text-slate-300 space-y-2">
+                        <div class="font-bold text-blue-300 flex items-center">
+                            <i class="fa-solid fa-lightbulb mr-2"></i> Strategic Takeaway for Clients & Leadership:
+                        </div>
+                        <p class="leading-relaxed">
+                            Simultaneously addressing <strong class="text-white">COD friction</strong> and <strong class="text-white">logistics delays</strong> produces a compounding flywheel effect: reducing reverse logistics costs immediately increases Net Revenue, while fast deliveries elevate CSAT by +0.20★, which directly boosts 90-day Customer Retention by +9.1 percentage points!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Machine Learning Prediction Playground -->
+        <section class="glass-card p-6 md:p-8 space-y-6">
+            <div>
+                <div class="inline-flex items-center space-x-1.5 text-xs font-semibold text-emerald-400 mb-1">
+                    <i class="fa-solid fa-microchip"></i>
+                    <span>Production Inference Engine</span>
+                </div>
+                <h3 class="text-2xl font-bold text-white">Live Customer Journey Risk Predictor</h3>
+                <p class="text-sm text-slate-400">Score incoming transactions in real-time to trigger preventive actions before fulfillment.</p>
+            </div>
+
+            <form id="predictionForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">Category</label>
+                    <select id="predCategory" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                        <option value="Fashion & Apparel" selected>Fashion & Apparel</option>
+                        <option value="Electronics & Gadgets">Electronics & Gadgets</option>
+                        <option value="Home & Kitchen">Home & Kitchen</option>
+                        <option value="Beauty & Health">Beauty & Health</option>
+                        <option value="Sports & Fitness">Sports & Fitness</option>
+                        <option value="Books & Media">Books & Media</option>
+                    </select>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">Payment Method</label>
+                    <select id="predPayment" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                        <option value="Cash on Delivery (COD)" selected>Cash on Delivery (COD)</option>
+                        <option value="UPI / Digital Wallet">UPI / Digital Wallet</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="BNPL (Pay Later)">BNPL (Pay Later)</option>
+                    </select>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">City Tier</label>
+                    <select id="predCity" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                        <option value="Tier-3" selected>Tier-3 (Rural / Semi-urban)</option>
+                        <option value="Tier-2">Tier-2 (Urban)</option>
+                        <option value="Tier-1">Tier-1 (Metro)</option>
+                    </select>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">Logistics Carrier</label>
+                    <select id="predCarrier" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                        <option value="SpeedPost" selected>SpeedPost (High Delay Variance)</option>
+                        <option value="ApexLogistics">ApexLogistics</option>
+                        <option value="Delhivery">Delhivery</option>
+                        <option value="BlueDart">BlueDart</option>
+                        <option value="SwiftExpress">SwiftExpress</option>
+                    </select>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">Order Price ($)</label>
+                    <input id="predPrice" type="number" value="75.0" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">Discount (%)</label>
+                    <input id="predDiscount" type="number" value="35.0" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">Estimated Delivery Days</label>
+                    <input id="predEstDays" type="number" value="6" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">Expected Delivery Delay (Days)</label>
+                    <input id="predDelayDays" type="number" value="2" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">Prior Return Ratio (0 to 1)</label>
+                    <input id="predPriorReturn" type="number" step="0.05" value="0.30" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">Customer Prior Orders</label>
+                    <input id="predPriorOrders" type="number" value="3" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-slate-400 font-medium">Session Duration (min)</label>
+                    <input id="predDuration" type="number" value="8.5" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200">
+                </div>
+
+                <div class="flex items-end">
+                    <button type="button" id="predictBtn" class="w-full py-2.5 rounded text-xs font-bold gradient-btn text-white transition hover:opacity-90 flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>Run AI Inference</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Inference Results Box -->
+            <div id="inferenceResult" class="hidden p-5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-4">
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <div class="flex items-center space-x-3">
+                        <div id="riskBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase"></div>
+                        <span class="text-sm font-semibold text-white">Return Risk Probability: <span id="riskProb" class="font-bold"></span></span>
+                    </div>
+                    <div class="text-sm text-slate-300">
+                        Predicted CSAT Rating: <span id="predRatingVal" class="text-amber-400 font-bold"></span>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-800 pt-3">
+                    <h5 class="text-xs font-bold text-slate-300 mb-2 flex items-center">
+                        <i class="fa-solid fa-list-check text-blue-400 mr-2"></i> Automated Prescriptive Actions:
+                    </h5>
+                    <ul id="prescriptionList" class="space-y-1.5 text-xs text-slate-300 list-disc list-inside"></ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Publication Figure Gallery -->
+        <section class="glass-card p-6 md:p-8 space-y-6">
+            <div>
+                <h3 class="text-xl font-bold text-white">Project Diagnostic Artifacts</h3>
+                <p class="text-sm text-slate-400">Exported high-resolution charts generated from the machine learning and EDA pipelines</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="rounded-xl overflow-hidden bg-slate-900 border border-slate-800 space-y-2 p-2">
+                    <img src="/figures/01_journey_funnel_and_discount.png" alt="Funnel & Discount" class="w-full h-48 object-cover rounded-lg hover:scale-105 transition duration-300">
+                    <p class="text-xs font-semibold text-center text-slate-300 py-1">Conversion Funnel & Discount Elasticity</p>
+                </div>
+                <div class="rounded-xl overflow-hidden bg-slate-900 border border-slate-800 space-y-2 p-2">
+                    <img src="/figures/02_return_reasons_and_payment.png" alt="Payment & Returns" class="w-full h-48 object-cover rounded-lg hover:scale-105 transition duration-300">
+                    <p class="text-xs font-semibold text-center text-slate-300 py-1">Payment Method & Return Root Causes</p>
+                </div>
+                <div class="rounded-xl overflow-hidden bg-slate-900 border border-slate-800 space-y-2 p-2">
+                    <img src="/figures/03_delivery_vs_ratings.png" alt="Delivery & CSAT" class="w-full h-48 object-cover rounded-lg hover:scale-105 transition duration-300">
+                    <p class="text-xs font-semibold text-center text-slate-300 py-1">Delivery Delays vs CSAT Rating</p>
+                </div>
+                <div class="rounded-xl overflow-hidden bg-slate-900 border border-slate-800 space-y-2 p-2">
+                    <img src="/figures/04_geographic_insights.png" alt="Geographic Insights" class="w-full h-48 object-cover rounded-lg hover:scale-105 transition duration-300">
+                    <p class="text-xs font-semibold text-center text-slate-300 py-1">City Tier Delays & Return Patterns</p>
+                </div>
+                <div class="rounded-xl overflow-hidden bg-slate-900 border border-slate-800 space-y-2 p-2">
+                    <img src="/figures/05_customer_segments_pca.png" alt="Customer Clusters" class="w-full h-48 object-cover rounded-lg hover:scale-105 transition duration-300">
+                    <p class="text-xs font-semibold text-center text-slate-300 py-1">12-D RFM-E Clustering (PCA Projection)</p>
+                </div>
+                <div class="rounded-xl overflow-hidden bg-slate-900 border border-slate-800 space-y-2 p-2">
+                    <img src="/figures/06_return_model_feature_importance.png" alt="Feature Importance" class="w-full h-48 object-cover rounded-lg hover:scale-105 transition duration-300">
+                    <p class="text-xs font-semibold text-center text-slate-300 py-1">Top Return Drivers (ML Feature Importance)</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+        <p>ShopSense — Beyond the Purchase · Academic & Enterprise E-Commerce Optimization Engine</p>
+    </footer>
+
+    <!-- Frontend Interactive Scripts -->
+    <script>
+        // Data injected from FastAPI
+        const edaData = {{ eda | tojson }};
+
+        // 1. Funnel Chart
+        new Chart(document.getElementById('funnelChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Total Visits', 'Cart Additions', 'Completed Orders'],
+                datasets: [{
+                    label: 'Funnel Count',
+                    data: [edaData.kpis.total_sessions, Math.round(edaData.kpis.total_sessions * 0.76), edaData.kpis.total_orders],
+                    backgroundColor: ['#3b82f6', '#0ea5e9', '#10b981'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+                    x: { ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+
+        // 2. Payment Method Chart
+        const paymentLabels = edaData.payment_metrics.map(p => p.payment_method);
+        const paymentReturns = edaData.payment_metrics.map(p => p.return_rate);
+        const paymentColors = paymentLabels.map(l => l.includes('COD') ? '#ef4444' : '#3b82f6');
+
+        new Chart(document.getElementById('paymentChart'), {
+            type: 'bar',
+            data: {
+                labels: paymentLabels,
+                datasets: [{
+                    label: 'Return Rate (%)',
+                    data: paymentReturns,
+                    backgroundColor: paymentColors,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+                    x: { ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+
+        // 3. Return Reasons Chart
+        const reasons = edaData.return_reasons;
+        new Chart(document.getElementById('reasonsChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(reasons),
+                datasets: [{
+                    data: Object.values(reasons),
+                    backgroundColor: ['#f43f5e', '#f97316', '#eab308', '#06b6d4', '#8b5cf6', '#64748b'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right', labels: { color: '#cbd5e1', font: { size: 10 } } }
+                }
+            }
+        });
+
+        // 4. Category Chart
+        const catLabels = edaData.category_metrics.map(c => c.category);
+        const catSales = edaData.category_metrics.map(c => c.gross_sales);
+        const catReturns = edaData.category_metrics.map(c => c.return_rate);
+
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'bar',
+            data: {
+                labels: catLabels,
+                datasets: [
+                    {
+                        label: 'Gross Sales ($)',
+                        data: catSales,
+                        backgroundColor: '#6366f1',
+                        borderRadius: 6,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Return Rate (%)',
+                        data: catReturns,
+                        backgroundColor: '#f43f5e',
+                        borderRadius: 6,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#cbd5e1' } } },
+                scales: {
+                    y: { position: 'left', grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+                    y1: { position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#f43f5e' } },
+                    x: { ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+
+        // Slider Updates
+        const codSlider = document.getElementById('codSlider');
+        const fitSlider = document.getElementById('fitSlider');
+        const rerouteSlider = document.getElementById('rerouteSlider');
+
+        codSlider.oninput = (e) => document.getElementById('codVal').innerText = e.target.value + '%';
+        fitSlider.oninput = (e) => document.getElementById('fitVal').innerText = e.target.value + '%';
+        rerouteSlider.oninput = (e) => document.getElementById('rerouteVal').innerText = e.target.value + '%';
+
+        // Simulation Trigger
+        document.getElementById('runSimBtn').onclick = async () => {
+            const btn = document.getElementById('runSimBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i><span>Simulating...</span>';
+
+            const payload = {
+                cod_intervention_rate: parseFloat(codSlider.value) / 100.0,
+                fit_advisor_adoption: parseFloat(fitSlider.value) / 100.0,
+                logistics_reroute_intensity: parseFloat(rerouteSlider.value) / 100.0,
+                discount_strategy: document.getElementById('discountSelect').value
+            };
+
+            try {
+                const res = await fetch('/api/simulate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                document.getElementById('liftRevenue').innerText = `+$${Math.round(data.lift.net_revenue_lift_usd).toLocaleString()}`;
+                document.getElementById('liftRevenuePct').innerText = `+${data.lift.net_revenue_lift_pct}% margin gain`;
+                document.getElementById('liftReturns').innerText = `-${data.lift.return_rate_reduction_pct_points}% pts`;
+                document.getElementById('savedCosts').innerText = `$${Math.round(data.lift.return_costs_saved_usd).toLocaleString()} logistics saved`;
+                document.getElementById('liftCsat').innerText = `+${data.lift.csat_increase_points} ★`;
+                document.getElementById('newCsatVal').innerText = `New score: ${data.optimized.avg_csat} / 5.0`;
+                document.getElementById('liftRetention').innerText = `+${data.lift.retention_lift_pct_points}% pts`;
+                document.getElementById('newRetentionVal').innerText = `New rate: ${data.optimized.retention_rate_pct}%`;
+            } catch (err) {
+                console.error(err);
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-play"></i><span>Execute Scenario Simulation</span>';
+            }
+        };
+
+        // Live Inference Trigger
+        document.getElementById('predictBtn').onclick = async () => {
+            const btn = document.getElementById('predictBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i><span>Scoring...</span>';
+
+            const payload = {
+                category: document.getElementById('predCategory').value,
+                payment_method: document.getElementById('predPayment').value,
+                city_tier: document.getElementById('predCity').value,
+                region: 'North',
+                device_type: 'Mobile App',
+                carrier: document.getElementById('predCarrier').value,
+                final_price: parseFloat(document.getElementById('predPrice').value),
+                discount_percent: parseFloat(document.getElementById('predDiscount').value),
+                session_duration_min: parseFloat(document.getElementById('predDuration').value),
+                page_views: 12,
+                cart_additions: 3,
+                estimated_delivery_days: parseFloat(document.getElementById('predEstDays').value),
+                delivery_delay_days: parseFloat(document.getElementById('predDelayDays').value),
+                customer_tenure_months: 18,
+                prior_orders: parseInt(document.getElementById('predPriorOrders').value),
+                prior_return_ratio: parseFloat(document.getElementById('predPriorReturn').value)
+            };
+
+            try {
+                const res = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const out = await res.json();
+
+                const box = document.getElementById('inferenceResult');
+                box.classList.remove('hidden');
+
+                const badge = document.getElementById('riskBadge');
+                badge.innerText = out.return_risk_level + ' Risk';
+                if (out.return_risk_level === 'High') {
+                    badge.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30';
+                } else if (out.return_risk_level === 'Medium') {
+                    badge.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30';
+                } else {
+                    badge.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+                }
+
+                document.getElementById('riskProb').innerText = (out.return_risk_probability * 100).toFixed(1) + '%';
+                document.getElementById('predRatingVal').innerText = out.predicted_rating + ' ★';
+
+                const list = document.getElementById('prescriptionList');
+                list.innerHTML = '';
+                out.prescriptions.forEach(p => {
+                    const li = document.createElement('li');
+                    li.innerText = p;
+                    list.appendChild(li);
+                });
+            } catch (err) {
+                console.error(err);
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-bolt"></i><span>Run AI Inference</span>';
+            }
+        };
+
+        // Customer Journey CRM Lookup
+        async function lookupCustomer(cid) {
+            document.getElementById('custSearchInput').value = cid;
+            await executeCustomerSearch();
+        }
+
+        async function executeCustomerSearch() {
+            const cid = document.getElementById('custSearchInput').value.trim();
+            if (!cid) return;
+            const btn = document.getElementById('custSearchBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i><span>Searching...</span>';
+
+            try {
+                const res = await fetch(`/api/customer/${encodeURIComponent(cid)}`);
+                if (!res.ok) {
+                    alert(`Customer '${cid}' not found. Please try CUST_00001, CUST_00003, etc.`);
+                    return;
+                }
+                const data = await res.json();
+                const p = data.profile;
+                const orders = data.recent_orders;
+
+                document.getElementById('custDetailsContainer').classList.remove('hidden');
+                document.getElementById('custPersonaBadge').innerText = p.persona || 'Customer';
+                document.getElementById('custSpendVal').innerText = `$${Math.round(p.total_spend || 0).toLocaleString()}`;
+                document.getElementById('custOrdersVal').innerText = `${p.total_orders} Orders`;
+                document.getElementById('custReturnRateVal').innerText = `${((p.return_rate || 0) * 100).toFixed(1)}%`;
+                document.getElementById('custRatingVal').innerText = `${(p.avg_rating || 0).toFixed(1)} ★`;
+                document.getElementById('custLocationVal').innerText = `${p.city_tier || 'Tier-1'}, ${p.region || 'North'}`;
+
+                const tbody = document.getElementById('custOrdersTableBody');
+                tbody.innerHTML = '';
+                orders.forEach(o => {
+                    const tr = document.createElement('tr');
+                    const isRet = o.is_returned === 1;
+                    const isDelay = o.delivery_delay_days > 0;
+                    tr.className = 'hover:bg-slate-900/40 transition';
+                    tr.innerHTML = `
+                        <td class="p-3 font-mono text-[11px] text-blue-400">${o.transaction_id}</td>
+                        <td class="p-3">${o.category}</td>
+                        <td class="p-3 font-semibold text-white">$${o.final_price}</td>
+                        <td class="p-3 text-amber-400">${o.discount_percent}%</td>
+                        <td class="p-3">${o.payment_method}</td>
+                        <td class="p-3 ${isDelay ? 'text-rose-400 font-bold' : 'text-slate-400'}">${o.actual_delivery_days || o.estimated_delivery_days || 3}d ${isDelay ? `(+${o.delivery_delay_days}d)` : 'On-time'}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${isRet ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">${isRet ? 'Returned' : 'Delivered'}</span></td>
+                        <td class="p-3 font-bold text-amber-400">${o.customer_rating ? o.customer_rating + '★' : '—'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error(err);
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i><span>Inspect Profile</span>';
+            }
+        }
+    </script>
+</body>
+</html>
